@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    canvas {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+<canvas width="800" height="600" id='cas'></canvas>
+
+<script>
+  // 获取元素
+  var cas = document.getElementById( "cas" );
+  // 获取绘图上下文
+  var ctx = cas.getContext( '2d' );
+  //获取图片对象
+  var img = new Image();
+  img.src = "./soldier.png";
+
+  img.onload = function () {
+    //小人的大小
+    var picWidth = img.width/4;
+    var picHeight = img.height/4;
+
+    //小人走动的速度
+    var speedX = 10;
+    var speedY = 10;
+
+    //当前绘制的小人图片的行号和列号
+    var rowIndex = 2;
+    var colIndex = 0;
+    //初始坐标
+    var x = (cas.width - picWidth )/2;
+    var y = (cas.height - picHeight )/2;
+
+    //把小人画到画布上面
+    ctx.drawImage(img,colIndex * picWidth,rowIndex * picHeight,picWidth,picHeight,x,y,picWidth,picHeight);
+
+    //通过键盘控制小人走动的方向
+    document.addEventListener("keydown",function (e) {
+        switch (e.keyCode){
+          case 38 :
+            rowIndex = 3;
+            move("up");
+            break;
+          case 40 :
+            rowIndex = 0;
+            move("down");
+            break;
+          case 37 :
+            rowIndex = 1;
+            move("left");
+            break;
+          case 39 :
+            rowIndex = 2;
+            move("right");
+            break;
+        }
+    })
+
+    //让人动
+    function move(direction) {
+      colIndex ++;
+      colIndex %=4;
+      switch (direction){
+        case "up":
+          y-= speedY;
+          break;
+        case "down":
+          y+= speedY;
+          break;
+        case "left":
+          x-= speedX;
+          break;
+        case "right":
+          x+= speedX;
+          break;
+      }
+
+      //先清除上一次的画
+      ctx.clearRect(0, 0, cas.width, cas.height);
+      //重新画
+      ctx.drawImage(img, colIndex * picWidth, rowIndex * picHeight, picWidth, picHeight, x, y, picWidth, picHeight);
+    }
+
+  }
+
+
+</script>
+</body>
+</html>
